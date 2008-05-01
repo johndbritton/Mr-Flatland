@@ -170,7 +170,6 @@ class Player(pygame.sprite.Sprite):
 			grid[self.pos][27]=Square(self.pos, 27, False, False)
 			drillCol(self.pos, grid)
 
-			
 def drillCol(pos, grid):
 	if pos >=0 or pos<20:
 		for x in range(0, 27):
@@ -217,31 +216,31 @@ def main():
 	fist = Fist()
 	player = Player()
 	allsprites = pygame.sprite.RenderPlain((player, fist, chimp))
-	
+
+	#Game Setup
+	#Empty space
+	grid = []
+	for x in range(0,20):
+		grid.append([])
+		for y in range(0,28):
+			grid[x].append(Square(x,y,False,False))
+
+	#Sand
+	for x in range(0,20):
+		for y in range(20,28):
+			grid[x][y] = Square(x,y,False,True)
+
+	for x in range(0,10):
+		for y in range(15,20):
+			grid[x][y] = Square(x,y,True,True)
+				
+	for x in range(10,20):
+		for y in range(15,20):
+			grid[x][y] = Square(x,y,True,False)
+					
 #Main Loop
 	while 1:
 		clock.tick(60)
-
-	#Game Setup
-		#Empty space
-		grid = []
-		for x in range(0,20):
-			grid.append([])
-			for y in range(0,28):
-				grid[x].append(Square(x,y,False,False))
-
-		#Sand
-		for x in range(0,20):
-			for y in range(20,28):
-				grid[x][y] = Square(x,y,False,True)
-
-		for x in range(0,10):
-			for y in range(15,20):
-				grid[x][y] = Square(x,y,True,True)
-
-		for x in range(10,20):
-			for y in range(15,20):
-				grid[x][y] = Square(x,y,True,False)
 
 	#Handle Input Events
 		for event in pygame.event.get():
