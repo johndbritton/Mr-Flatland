@@ -68,7 +68,7 @@ class Player(pygame.sprite.Sprite):
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
 		self.image = pygame.image.load("Sprites/player.png").convert_alpha()
-		self.rect = pygame.Rect(0, 672, self.image.get_rect().width, self.image.get_rect().height)
+		self.rect = pygame.Rect(-12, 0, self.image.get_rect().width, self.image.get_rect().height)
 		screen = pygame.display.get_surface()
 		self.area = screen.get_rect()
 		
@@ -87,11 +87,11 @@ class Player(pygame.sprite.Sprite):
 	def move(self, dir):
 		if dir > 0 and self.pos<self.maxPos:
 			self.pos+=1
-			self.rect = self.rect.move(self.image.get_rect().width,0)
+			self.rect = self.rect.move(self.image.get_rect().width/2,0)
 			#print "yay"
 		elif dir < 0 and self.pos > 0:
 			self.pos-=1
-			self.rect = self.rect.move(-1*self.image.get_rect().width,0)
+			self.rect = self.rect.move(-1*self.image.get_rect().width/2,0)
 			#print "yeah"
 	
 	def drill(self, grid):
@@ -143,10 +143,11 @@ def detectLine(grid,player):
 	above = False
 	row = 0
 
+	found = False
 	for y in range(0,len(grid[0])):
-		if grid[0][y].issand:
-			if y>row:
-				row = y
+		if grid[0][y].issand and not(found):
+			row = y
+			found = True
 
 	for x in range(0,20):	
 		if not(grid[x][row].issand):
@@ -156,7 +157,6 @@ def detectLine(grid,player):
 		if grid[x][row-1].issand:
 			above = True
 						
-	print above
 	if (not(above) and flat):
 		print str("found")
 		for y in range(row, len(grid[0])):
