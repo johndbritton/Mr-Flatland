@@ -8,7 +8,7 @@ follow along in the tutorial.
 
 
 #Import Modules
-import os, pygame, sys
+import os, pygame, sys, random
 from pygame.locals import *
 
 if not pygame.font: print 'Warning, fonts disabled'
@@ -115,6 +115,12 @@ def moveGrid(grid):
 				if not(grid[x][l-y].issand or grid[x][l-y].isbrick):
 					grid[x][l-y]=Square(x, l-y, grid[x][l-1-y].isbrick, grid[x][l-1-y].issand)
 					grid[x][l-1-y]=Square(x, l-1-y, False, False)
+
+def generateBricks(grid):
+	for x in range(0,20):
+		rand = random.randint(0,5)
+		if(rand == 1):
+			grid[x][0] = Square(x,0,True,False)
 		
 def main():
 	"""this function is called when the program starts.
@@ -181,7 +187,9 @@ def main():
 			seconds+=1
 			#put code here that happens every second!
 			moveGrid(grid)
-
+			if(seconds % random.randint(1,5) == 0):
+				generateBricks(grid)
+				
 	#Handle Input Events
 		for event in pygame.event.get():
 			if event.type == QUIT:
