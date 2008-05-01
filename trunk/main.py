@@ -79,10 +79,10 @@ class Player(pygame.sprite.Sprite):
 		self.bank = 0
 		self.mult = 1
 		
-		self.font = pygame.font.Font('data/ARIALN.TTF', 10)
-		self.scoreTXT=self.font.render(str(self.score),0,(0,0,0))
-		self.bankTXT=self.font.render(str(self.bank),0,(0,0,0))
-		self.multTXT=self.font.render(str(self.mult),0,(0,0,0))
+		self.font = pygame.font.Font('data/impact.ttf', 18)
+		self.scoreTXT=self.font.render(str(self.score),1,(0,0,0))
+		self.bankTXT=self.font.render(str(self.bank),1,(0,0,0))
+		self.multTXT=self.font.render(str(self.mult),1,(0,0,0))
 	
 	def move(self, dir):
 		if dir > 0 and self.pos<self.maxPos:
@@ -177,9 +177,9 @@ def generateBricks(grid):
 						grid[x][y] = Square(x,0,True,False)
 
 def updateHUD(player):
-	player.scoreTXT=player.font.render(str(player.score),0,(0,0,0))
-	player.multTXT=player.font.render(str(player.mult),0,(0,0,0))
-	player.bankTXT=player.font.render(str(player.bank),0,(0,0,0))
+	player.scoreTXT=player.font.render(str(player.score),1,(0,0,0))
+	player.multTXT=player.font.render(str(player.mult),1,(0,0,0))
+	player.bankTXT=player.font.render(str(player.bank),1,(0,0,0))
 		
 def main():
 	"""this function is called when the program starts.
@@ -280,9 +280,9 @@ def main():
 				if(grid[x][y].issand or grid[x][y].isbrick):
 					screen.blit(grid[x][y].image, grid[x][y].rect)
 		
-		screen.blit(player.scoreTXT,(10,10,0,0))
-		screen.blit(player.bankTXT,(10,30,0,0))
-		screen.blit(player.multTXT,(10,50,0,0))
+		screen.blit(player.scoreTXT,(492,587,0,0))
+		screen.blit(player.bankTXT,(505,430,0,0))
+		screen.blit(player.multTXT,(505,508,0,0))
 		allsprites.draw(screen)
 		pygame.display.flip()
 
