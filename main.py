@@ -166,6 +166,7 @@ def main():
 	allsprites = pygame.sprite.RenderPlain((player))
 	
 	seconds = 0
+	genTimer = random.randint(1,5)
 
 	#Game Setup
 	#Empty space
@@ -188,7 +189,8 @@ def main():
 			seconds+=1
 			#put code here that happens every second!
 			moveGrid(grid)
-			if(seconds % random.randint(1,5) == 0):
+			if(seconds % genTimer == 0):
+				genTimer = random.randint(1,5)
 				generateBricks(grid)
 				
 	#Handle Input Events
