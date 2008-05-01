@@ -245,7 +245,7 @@ def main():
 	sfx_flat = load_sound('flat.wav')
 	sfx_boo = load_sound('boo.wav')
 
-	music_bg.play()
+	pygame.mixer.find_channel().play(music_bg, -1, 0)
 	
 	clock = pygame.time.Clock()
 	player = Player()
