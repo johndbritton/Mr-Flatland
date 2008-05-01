@@ -183,6 +183,7 @@ def detectLine(grid,player,sfx_flat):
 		player.score += player.bank*player.mult
 		player.bank = 0
 		player.mult = 1
+		#sfx_flat.play()
 
 def generateBricks(grid):
 	generate = random.randint(0,9)
@@ -243,6 +244,8 @@ def main():
 	sfx_dig = load_sound('dig.wav')
 	sfx_flat = load_sound('flat.wav')
 	sfx_boo = load_sound('boo.wav')
+
+	music_bg.play()
 	
 	clock = pygame.time.Clock()
 	player = Player()
@@ -317,6 +320,16 @@ def main():
 					#print "left"
 				elif event.key == pygame.K_SPACE:
 					player.drill(grid)
+<<<<<<< .mine
+					sfx_dig.play()
+#			elif event.type == KEYUP:
+#				if event.key == pygame.K_RIGHT:
+#					player.move(1)
+#					#print "right"
+#				elif event.key == pygame.K_LEFT:
+#					player.move(-1)
+#					#print "left"
+=======
 			elif event.type == KEYUP:
 				if event.key == pygame.K_RIGHT:
 					player.moving = False
@@ -328,6 +341,7 @@ def main():
 					player.stillMoving = False
 					player.stillMovinger=False
 					#print "left"
+>>>>>>> .r39
 
 		allsprites.update()
 
