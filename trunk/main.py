@@ -54,15 +54,15 @@ class Square(pygame.sprite.Sprite):
 
 		if(b and s):
 			self.image = pygame.image.load("sprites/bricksand.png").convert_alpha()
-			self.rect = pygame.Rect(x*24, y*24, self.image.get_rect().width, self.image.get_rect().height)
+			self.rect = pygame.Rect(x*24, (y*24)-96, self.image.get_rect().width, self.image.get_rect().height)
 		elif(b):
 			self.isbrick = True
 			self.image = pygame.image.load("sprites/brick.png").convert_alpha()
-			self.rect = pygame.Rect(x*24, y*24, self.image.get_rect().width, self.image.get_rect().height)
+			self.rect = pygame.Rect(x*24, (y*24)-96, self.image.get_rect().width, self.image.get_rect().height)
 		elif(s):
 			self.issand = True
 			self.image = pygame.image.load("sprites/sand.png").convert_alpha()
-			self.rect = pygame.Rect(x*24, y*24, self.image.get_rect().width, self.image.get_rect().height)
+			self.rect = pygame.Rect(x*24, (y*24)-96, self.image.get_rect().width, self.image.get_rect().height)
 		
 class Player(pygame.sprite.Sprite):
 	def __init__(self):
@@ -165,21 +165,13 @@ def main():
 	grid = []
 	for x in range(0,20):
 		grid.append([])
-		for y in range(0,28):
+		for y in range(0,32):
 			grid[x].append(Square(x,y,False,False))
 
 	#Sand
 	for x in range(0,20):
-		for y in range(20,28):
+		for y in range(24,32):
 			grid[x][y] = Square(x,y,False,True)
-
-	for x in range(0,10):
-		for y in range(0,5):
-			grid[x][y] = Square(x,y,True,True)
-				
-	for x in range(10,20):
-		for y in range(15,20):
-			grid[x][y] = Square(x,y,True,False)
 
 #Main Loop
 	while 1:
@@ -222,7 +214,7 @@ def main():
 		screen.blit(backgroundImg, backgroundImgRect)
 
 		for x in range(0,20):
-			for y in range(0,28):
+			for y in range(0,len(grid[0])):
 				if(grid[x][y].issand or grid[x][y].isbrick):
 					screen.blit(grid[x][y].image, grid[x][y].rect)
 
