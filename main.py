@@ -320,16 +320,7 @@ def main():
 					#print "left"
 				elif event.key == pygame.K_SPACE:
 					player.drill(grid)
-<<<<<<< .mine
 					sfx_dig.play()
-#			elif event.type == KEYUP:
-#				if event.key == pygame.K_RIGHT:
-#					player.move(1)
-#					#print "right"
-#				elif event.key == pygame.K_LEFT:
-#					player.move(-1)
-#					#print "left"
-=======
 			elif event.type == KEYUP:
 				if event.key == pygame.K_RIGHT:
 					player.moving = False
@@ -341,7 +332,6 @@ def main():
 					player.stillMoving = False
 					player.stillMovinger=False
 					#print "left"
->>>>>>> .r39
 
 		allsprites.update()
 
