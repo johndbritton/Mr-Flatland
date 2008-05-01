@@ -121,16 +121,19 @@ def main():
 	background = pygame.Surface(screen.get_size())
 	background = background.convert()
 	background.fill((250, 250, 250))
+	backgroundImg = pygame.image.load('data/sky.png')
+	backgroundImgRect = backgroundImg.get_rect()
 	
 #Put Text On The Background, Centered
 	if pygame.font:
 		font = pygame.font.Font(None, 36)
 		text = font.render("Mr. Flatland Rocks!", 1, (10, 10, 10))
 		textpos = text.get_rect(centerx=background.get_width()/2)
-		background.blit(text, textpos)
+		backgroundImg.blit(text, textpos)
 
 #Display The Background
-	screen.blit(background, (0, 0))
+	screen.blit(background, (0,0))
+	screen.blit(backgroundImg, backgroundImgRect)
 	pygame.display.flip()
 	
 #Prepare Game Objects
@@ -190,7 +193,8 @@ def main():
 		allsprites.update()
 
 	#Draw Everything
-		screen.blit(background, (0, 0))
+		screen.blit(background, (0,0))
+		screen.blit(backgroundImg, backgroundImgRect)
 
 		for x in range(0,20):
 			for y in range(0,28):
