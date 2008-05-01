@@ -119,10 +119,17 @@ def moveGrid(grid):
 					grid[x][l-1-y]=Square(x, l-1-y, True, True)
 
 def generateBricks(grid):
-	for x in range(0,20):
-		rand = random.randint(0,5)
-		if(rand == 1):
-			grid[x][0] = Square(x,0,True,False)
+	generate = random.randint(0,9)
+	if(generate == 0 or generate == 1 or generate == 2):
+		generate = True
+	if(generate):
+		start = random.randint(0,20)
+		for x in range(start, start+2):
+			for y in range(0,2):
+				brick = random.randint(0,1)
+				if(brick == 0):
+					if(x<20):
+						grid[x][y] = Square(x,0,True,False)
 		
 def main():
 	"""this function is called when the program starts.
