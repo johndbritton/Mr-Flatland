@@ -168,7 +168,7 @@ class Player(pygame.sprite.Sprite):
 			bank-=1
 		if grid[self.pos][27].issand:
 			grid[self.pos][27]=Square(self.pos, 27, False, False)
-			drillCol(self.pos, grid)
+			#drillCol(self.pos, grid)
 
 def drillCol(pos, grid):
 	if pos >=0 or pos<20:
