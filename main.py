@@ -162,6 +162,9 @@ def detectLine(grid,player):
 		for y in range(row, len(grid[0])):
 			for x in range(0,20):
 				grid[x][y] = Square(x,y,False,True)
+		player.score += player.bank*player.mult
+		player.bank = 0
+		player.mult = 1
 
 def generateBricks(grid):
 	generate = random.randint(0,9)
