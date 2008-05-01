@@ -78,6 +78,11 @@ class Player(pygame.sprite.Sprite):
 		self.score = 0
 		self.bank = 0
 		self.mult = 1
+		
+		self.font = pygame.font.Font('data/ARIALN.TTF', 10)
+		self.scoreTXT=self.font.render(str(self.score),0,(0,0,0))
+		self.bankTXT=self.font.render(str(self.bank),0,(0,0,0))
+		self.multTXT=self.font.render(str(self.mult),0,(0,0,0))
 	
 	def move(self, dir):
 		if dir > 0 and self.pos<self.maxPos:
@@ -107,16 +112,31 @@ def drillCol(x, grid):
 				grid[x][y-i]=Square(x, y-i, False, False)
 				return
 
-def moveGrid(grid):
+def moveGrid(grid, player):
 	l=len(grid[0])-1
+	gainMult=False
 	for x in range(0, len(grid)):
 		for y in range(0, len(grid[x])-1):
 			if grid[x][l-1-y].issand or grid[x][l-1-y].isbrick:
 				if not(grid[x][l-y].issand or grid[x][l-y].isbrick):
-					grid[x][l-y]=Square(x, l-y, grid[x][l-1-y].isbrick, grid[x][l-1-y].issand)
+					if y==0:
+						grid[x][l-y]=Square(x, l-y, True, True)
+						gainMult=True
+						player.bank+=1
+					else:
+						if grid[x][l-y+1].issand:
+							grid[x][l-y]=Square(x, l-y, grid[x][l-1-y].isbrick, True)
+							gainMult=True
+							player.bank+=1
+						else:
+							grid[x][l-y]=Square(x, l-y, grid[x][l-1-y].isbrick, grid[x][l-1-y].issand)
 					grid[x][l-1-y]=Square(x, l-1-y, False, False)
-				elif not grid[x][l-1-y].issand and grid[x][l-y].issand:
-					grid[x][l-1-y]=Square(x, l-1-y, True, True)
+				#elif (not grid[x][l-1-y].issand and grid[x][l-y].issand):
+				#	grid[x][l-1-y]=Square(x, l-1-y, True, True)
+				#	gainMult=True
+				#	player.bank+=1
+	if gainMult:
+		player.mult+=1
 
 def detectLine(grid,player):
 	flat = True
@@ -155,6 +175,11 @@ def generateBricks(grid):
 				if(brick == 0):
 					if(x<20):
 						grid[x][y] = Square(x,0,True,False)
+
+def updateHUD(player):
+	player.scoreTXT=player.font.render(str(player.score),0,(0,0,0))
+	player.multTXT=player.font.render(str(player.mult),0,(0,0,0))
+	player.bankTXT=player.font.render(str(player.bank),0,(0,0,0))
 		
 def main():
 	"""this function is called when the program starts.
@@ -214,11 +239,13 @@ def main():
 			seconds+=1
 			#put code here that happens every second!
 			detectLine(grid,player)
-			moveGrid(grid)
+			moveGrid(grid, player)
 			if(seconds % genTimer == 0):
 				genTimer = random.randint(1,5)
 				generateBricks(grid)
 			
+		
+		updateHUD(player)
 	#Handle Input Events
 		for event in pygame.event.get():
 			if event.type == QUIT:
@@ -252,7 +279,10 @@ def main():
 			for y in range(0,len(grid[0])):
 				if(grid[x][y].issand or grid[x][y].isbrick):
 					screen.blit(grid[x][y].image, grid[x][y].rect)
-
+		
+		screen.blit(player.scoreTXT,(10,10,0,0))
+		screen.blit(player.bankTXT,(10,30,0,0))
+		screen.blit(player.multTXT,(10,50,0,0))
 		allsprites.draw(screen)
 		pygame.display.flip()
 
