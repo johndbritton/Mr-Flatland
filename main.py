@@ -287,6 +287,7 @@ def main():
 			updateHUD(player)
 		elif not player.alive:
 			player.loseTXT = player.lfont.render('you lose!',1,(0,0,0))
+			sfx_boo.play()
 		
 		if quarterSeconds < pygame.time.get_ticks()/1000.0:
 			quarterSeconds+=.25
