@@ -8,7 +8,7 @@ follow along in the tutorial.
 
 
 #Import Modules
-import os, pygame
+import os, pygame, sys
 from pygame.locals import *
 
 if not pygame.font: print 'Warning, fonts disabled'
