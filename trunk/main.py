@@ -224,6 +224,7 @@ def main():
 	allsprites = pygame.sprite.RenderPlain((player))
 	
 	seconds = 0
+	tenthSeconds=0
 	genTimer = random.randint(1,5)
 
 	#Game Setup
@@ -256,6 +257,10 @@ def main():
 			updateHUD(player)
 		elif not player.alive:
 			player.loseTXT = player.lfont.render('you lose!',1,(0,0,0))
+		
+		if tenthSeconds < pygame.time.get_ticks()/1000.0:
+			tenthSeconds+=.1
+			#put stuff like the player animation here!
 			
 		
 	#Handle Input Events
