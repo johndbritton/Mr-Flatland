@@ -90,11 +90,11 @@ class Player(pygame.sprite.Sprite):
 			#print "yeah"
 	
 	def drill(self, grid):
-		if grid[self.pos][27].isbrick:
+		if grid[self.pos][len(grid[self.pos])-1].isbrick:
 			self.mult=1
 			self.bank-=1
-		if grid[self.pos][27].issand:
-			grid[self.pos][27]=Square(self.pos, 27, False, False)
+		if grid[self.pos][len(grid[self.pos])-1].issand:
+			grid[self.pos][len(grid[self.pos])-1]=Square(self.pos, len(grid[self.pos])-1, False, False)
 			drillCol(self.pos, grid)
 
 def drillCol(x, grid):
@@ -115,6 +115,8 @@ def moveGrid(grid):
 				if not(grid[x][l-y].issand or grid[x][l-y].isbrick):
 					grid[x][l-y]=Square(x, l-y, grid[x][l-1-y].isbrick, grid[x][l-1-y].issand)
 					grid[x][l-1-y]=Square(x, l-1-y, False, False)
+				elif not grid[x][l-1-y].issand and grid[x][l-y].issand:
+					grid[x][l-1-y]=Square(x, l-1-y, True, True)
 
 def generateBricks(grid):
 	for x in range(0,20):
