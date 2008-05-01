@@ -118,6 +118,30 @@ def moveGrid(grid):
 				elif not grid[x][l-1-y].issand and grid[x][l-y].issand:
 					grid[x][l-1-y]=Square(x, l-1-y, True, True)
 
+def detectLine(grid,player):
+	flat = True
+	above = False
+	row = 0
+		
+	for y in range(0,len(grid[0])):
+		if grid[0][y].issand:
+			if y>row:
+				row = y
+
+	for x in range(0,20):	
+		if not(grid[x][row].issand):
+			flat = False
+
+	for x in range(0,20):	
+		if grid[x][row-1].issand:
+			above = True
+			
+	if (not(above) and flat):
+		print str("found")
+		for y in range(row, len(grid[0])):
+			for x in range(0,20):
+				grid[x][y] = Square(x,y,False,True)
+
 def generateBricks(grid):
 	generate = random.randint(0,9)
 	if(generate == 0 or generate == 1 or generate == 2):
@@ -188,11 +212,12 @@ def main():
 		if seconds < pygame.time.get_ticks()/1000.0:
 			seconds+=1
 			#put code here that happens every second!
+			detectLine(grid,player)
 			moveGrid(grid)
 			if(seconds % genTimer == 0):
 				genTimer = random.randint(1,5)
 				generateBricks(grid)
-				
+			
 	#Handle Input Events
 		for event in pygame.event.get():
 			if event.type == QUIT:
