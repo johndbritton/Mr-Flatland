@@ -143,7 +143,7 @@ def moveGrid(grid, player):
 	if gainMult:
 		player.mult+=1
 
-def detectLine(grid,player):
+def detectLine(grid,player,sfx_flat):
 	flat = True
 	above = False
 	row = 0
@@ -163,7 +163,6 @@ def detectLine(grid,player):
 			above = True
 						
 	if (not(above) and flat):
-		print str("found")
 		for y in range(row, len(grid[0])):
 			for x in range(0,20):
 				grid[x][y] = Square(x,y,False,True)
@@ -183,6 +182,12 @@ def generateBricks(grid):
 				if(brick == 0):
 					if(x<20):
 						grid[x][y] = Square(x,0,True,False)
+
+def stillPlaying(grid,player):
+	for x in range(0,20):
+		for y in range(0,4):
+			if grid[x][y].issand:
+				player.alive = False
 
 def updateHUD(player):
 	player.scoreTXT=player.font.render(str(player.score),1,(0,0,0))
@@ -219,6 +224,12 @@ def main():
 	pygame.display.flip()
 	
 #Prepare Game Objects
+	#Load Sounds
+	music_bg = load_sound('data/background.wav')
+	sfx_dig = load_sound('data/dig.wav')
+	sfx_flat = load_sound('data/flat.wav')
+	sfx_boo = load_sound('data/boo.wav')
+	
 	clock = pygame.time.Clock()
 	player = Player()
 	allsprites = pygame.sprite.RenderPlain((player))
@@ -249,9 +260,10 @@ def main():
 			if player.score/10000>.9:
 				seconds+=.1
 			#put code here that happens every second!
-			detectLine(grid,player)
+			detectLine(grid,player,sfx_flat)
 			moveGrid(grid, player)
-			if(seconds % genTimer == 0):
+			stillPlaying(grid,player)
+			if(int(seconds) % genTimer == 0):
 				genTimer = random.randint(1,5)
 				generateBricks(grid)
 			updateHUD(player)
