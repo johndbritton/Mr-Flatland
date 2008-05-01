@@ -207,11 +207,11 @@ def main():
 	backgroundImgRect = backgroundImg.get_rect()
 	
 #Put Text On The Background, Centered
-	if pygame.font:
-		font = pygame.font.Font(None, 36)
-		text = font.render("Mr. Flatland Rocks!", 1, (10, 10, 10))
-		textpos = text.get_rect(centerx=background.get_width()/2)
-		backgroundImg.blit(text, textpos)
+	#if pygame.font:
+		#font = pygame.font.Font(None, 36)
+		#text = font.render("Mr. Flatland Rocks!", 1, (10, 10, 10))
+		#textpos = text.get_rect(centerx=background.get_width()/2)
+		#backgroundImg.blit(text, textpos)
 
 #Display The Background
 	screen.blit(background, (0,0))
@@ -244,9 +244,9 @@ def main():
 		clock.tick()
 		
 		if seconds < pygame.time.get_ticks()/1000.0 and player.alive:
-			seconds+=1-player.score/10000
-			if player.score/10000>.75:
-				seconds+=.25
+			seconds+=1-player.score/1000
+			if player.score/10000>.9:
+				seconds+=.1
 			#put code here that happens every second!
 			detectLine(grid,player)
 			moveGrid(grid, player)
@@ -255,7 +255,7 @@ def main():
 				generateBricks(grid)
 			updateHUD(player)
 		elif not player.alive:
-			player.loseTXT = player.font.render('you lose!',1,(0,0,0))
+			player.loseTXT = player.lfont.render('you lose!',1,(0,0,0))
 			
 		
 	#Handle Input Events
