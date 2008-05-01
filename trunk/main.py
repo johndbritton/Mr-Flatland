@@ -74,11 +74,17 @@ class Player(pygame.sprite.Sprite):
 		
 		self.pos = 0
 		self.maxPos = 19
+		dir = 0
+		
+		self.animating=False
 		
 		self.score = 0
 		self.bank = 0
 		self.mult = 1
 		self.alive = True
+		self.moving = False
+		self.stillMoving = False
+		self.stillMovinger = False
 		
 		self.font = pygame.font.Font('data/impact.ttf', 18)
 		self.lfont = pygame.font.Font('data/impact.ttf', 35)
@@ -88,16 +94,24 @@ class Player(pygame.sprite.Sprite):
 		self.multTXT=self.font.render(str(self.mult),1,(0,0,0))
 	
 	def move(self, dir):
+		self.moving = True
+		self.dir=dir
 		if dir > 0 and self.pos<self.maxPos:
+			self.image=pygame.image.load("Sprites/player_down.png").convert_alpha()
+			self.animating=True
 			self.pos+=1
 			self.rect = self.rect.move(self.image.get_rect().width/2,0)
 			#print "yay"
 		elif dir < 0 and self.pos > 0:
+			self.image=pygame.image.load("Sprites/player_down.png").convert_alpha()
+			self.animating=True
 			self.pos-=1
 			self.rect = self.rect.move(-1*self.image.get_rect().width/2,0)
 			#print "yeah"
 	
 	def drill(self, grid):
+		self.image=pygame.image.load("Sprites/player_up.png").convert_alpha()
+		self.animating=True
 		if self.bank>0:
 			self.mult=1
 		if grid[self.pos][len(grid[self.pos])-1].isbrick:
@@ -225,10 +239,10 @@ def main():
 	
 #Prepare Game Objects
 	#Load Sounds
-	music_bg = load_sound('data/background.wav')
-	sfx_dig = load_sound('data/dig.wav')
-	sfx_flat = load_sound('data/flat.wav')
-	sfx_boo = load_sound('data/boo.wav')
+	music_bg = load_sound('background.wav')
+	sfx_dig = load_sound('dig.wav')
+	sfx_flat = load_sound('flat.wav')
+	sfx_boo = load_sound('boo.wav')
 	
 	clock = pygame.time.Clock()
 	player = Player()
@@ -236,6 +250,7 @@ def main():
 	
 	seconds = 0
 	tenthSeconds=0
+	quarterSeconds=0
 	genTimer = random.randint(1,5)
 
 	#Game Setup
@@ -270,10 +285,22 @@ def main():
 		elif not player.alive:
 			player.loseTXT = player.lfont.render('you lose!',1,(0,0,0))
 		
+		if quarterSeconds < pygame.time.get_ticks()/1000.0:
+			quarterSeconds+=.25
+			if player.animating:
+				player.image=pygame.image.load("Sprites/player.png").convert_alpha()
+				player.animating=False
+				
+			if player.moving:
+				player.stillMoving=True
+			#put stuff like the player animation here!
+		
 		if tenthSeconds < pygame.time.get_ticks()/1000.0:
 			tenthSeconds+=.1
-			#put stuff like the player animation here!
-			
+			if player.stillMovinger:
+				player.move(player.dir)
+			if player.stillMoving:
+				player.stillMovinger=True
 		
 	#Handle Input Events
 		for event in pygame.event.get():
@@ -290,13 +317,17 @@ def main():
 					#print "left"
 				elif event.key == pygame.K_SPACE:
 					player.drill(grid)
-#			elif event.type == KEYUP:
-#				if event.key == pygame.K_RIGHT:
-#					player.move(1)
-#					#print "right"
-#				elif event.key == pygame.K_LEFT:
-#					player.move(-1)
-#					#print "left"
+			elif event.type == KEYUP:
+				if event.key == pygame.K_RIGHT:
+					player.moving = False
+					player.stillMoving = False
+					player.stillMovinger=False
+					#print "right"
+				elif event.key == pygame.K_LEFT:
+					player.moving = False
+					player.stillMoving = False
+					player.stillMovinger=False
+					#print "left"
 
 		allsprites.update()
 
