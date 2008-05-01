@@ -164,18 +164,17 @@ class Player(pygame.sprite.Sprite):
 	
 	def drill(self, grid):
 		if grid[self.pos][27].isbrick:
-			mult=1
-			bank-=1
+			self.mult=1
+			self.bank-=1
 		if grid[self.pos][27].issand:
 			grid[self.pos][27]=Square(self.pos, 27, False, False)
-			#drillCol(self.pos, grid)
+			drillCol(self.pos, grid)
 
 def drillCol(pos, grid):
 	if pos >=0 or pos<20:
 		for x in range(0, 27):
 			if grid[pos][26-x].issand:
-				grid[pos][27-x]=grid[pos][26-x]
-				grid[pos][27-x].rect.move(0,24)
+				grid[pos][27-x]=Square(pos, 27-x, grid[pos][26-x].isbrick, grid[pos][26-x].issand)
 				print str(27-x)
 			else:
 				grid[pos][27-x]=Square(pos, 27-x, False, False)
@@ -240,7 +239,8 @@ def main():
 					
 #Main Loop
 	while 1:
-		clock.tick(60)
+		clock.tick()
+		print pygame.time.get_ticks()
 
 	#Handle Input Events
 		for event in pygame.event.get():
