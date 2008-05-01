@@ -1,0 +1,5 @@
+#summary Game Specifications
+
+= Screen Details =
+ * Block = 24px
+ * Board = 28 blocks h x 20 blocks w (480px x 672px)
