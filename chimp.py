@@ -175,7 +175,6 @@ def drillCol(pos, grid):
 		for x in range(0, 27):
 			if grid[pos][26-x].issand:
 				grid[pos][27-x]=Square(pos, 27-x, grid[pos][26-x].isbrick, grid[pos][26-x].issand)
-				print str(27-x)
 			else:
 				grid[pos][27-x]=Square(pos, 27-x, False, False)
 				return
