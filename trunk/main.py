@@ -67,7 +67,7 @@ class Square(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
-		self.image = pygame.image.load("Sprites/player.PNG").convert_alpha()
+		self.image = pygame.image.load("Sprites/player_right.PNG").convert_alpha()
 		self.rect = pygame.Rect(0, 672, self.image.get_rect().width, self.image.get_rect().height)
 		screen = pygame.display.get_surface()
 		self.area = screen.get_rect()
