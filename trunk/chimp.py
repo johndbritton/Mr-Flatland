@@ -144,19 +144,44 @@ class Player(pygame.sprite.Sprite):
 		self.rect = pygame.Rect(0, 672, self.image.get_rect().width, self.image.get_rect().height)
 		screen = pygame.display.get_surface()
 		self.area = screen.get_rect()
+		
 		self.pos = 0
 		self.maxPos = 19
+		
+		self.score = 0
+		self.bank = 0
+		self.mult = 1
 	
 	def move(self, dir):
 		if dir > 0 and self.pos<self.maxPos:
 			self.pos+=1
-			self.rect = self.rect.move(24,0)
+			self.rect = self.rect.move(self.image.get_rect().width,0)
 			#print "yay"
 		elif dir < 0 and self.pos > 0:
 			self.pos-=1
-			self.rect = self.rect.move(-24,0)
+			self.rect = self.rect.move(-1*self.image.get_rect().width,0)
 			#print "yeah"
+	
+	def drill(self, grid):
+		if grid[self.pos][27].isbrick:
+			mult=1
+			bank-=1
+		if grid[self.pos][27].issand:
+			grid[self.pos][27]=Square(self.pos, 27, False, False)
+			drillCol(self.pos, grid)
+
 			
+def drillCol(pos, grid):
+	if pos >=0 or pos<20:
+		for x in range(0, 27):
+			if grid[pos][26-x].issand:
+				grid[pos][27-x]=grid[pos][26-x]
+				grid[pos][27-x].rect.move(0,24)
+				print str(27-x)
+			else:
+				grid[pos][27-x]=Square(pos, 27-x, False, False)
+				return
+
 		
 def main():
 	"""this function is called when the program starts.
@@ -176,7 +201,7 @@ def main():
 #Put Text On The Background, Centered
 	if pygame.font:
 		font = pygame.font.Font(None, 36)
-		text = font.render("Pummel The Chimp, And Win $$$", 1, (10, 10, 10))
+		text = font.render("Mr. Flatland Rocks!", 1, (10, 10, 10))
 		textpos = text.get_rect(centerx=background.get_width()/2)
 		background.blit(text, textpos)
 
@@ -231,6 +256,15 @@ def main():
 				elif event.key == pygame.K_LEFT:
 					player.move(-1)
 					#print "left"
+				elif event.key == pygame.K_SPACE:
+					player.drill(grid)
+#			elif event.type == KEYUP:
+#				if event.key == pygame.K_RIGHT:
+#					player.move(1)
+#					#print "right"
+#				elif event.key == pygame.K_LEFT:
+#					player.move(-1)
+#					#print "left"
 			elif event.type == MOUSEBUTTONDOWN:
 				if fist.punch(chimp):
 					punch_sound.play() #punch
