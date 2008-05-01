@@ -119,16 +119,25 @@ class Chimp(pygame.sprite.Sprite):
 			self.original = self.image
 		
 class Player(pygame.sprite.Sprite):
-	"""moves a monkey critter across the screen. it can spin the
-	   monkey when it is punched."""
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
 		self.image = pygame.image.load("Sprites/player.PNG").convert_alpha()
-		#screen = pygame.display.get_surface()
-		#self.area = screen.get_rect()
-		#self.rect.topleft = 10, 10
-		#self.move = 9
-		#self.dizzy = 0
+		self.rect = pygame.Rect(0, 672, self.image.get_rect().width, self.image.get_rect().height)
+		screen = pygame.display.get_surface()
+		self.area = screen.get_rect()
+		self.pos = 0
+		self.maxPos = 19
+	
+	def move(self, dir):
+		if dir > 0 and self.pos<self.maxPos:
+			self.pos+=1
+			self.rect = self.rect.move(24,0)
+			#print "yay"
+		elif dir < 0 and self.pos > 0:
+			self.pos-=1
+			self.rect = self.rect.move(-24,0)
+			#print "yeah"
+			
 		
 def main():
 	"""this function is called when the program starts.
@@ -162,7 +171,8 @@ def main():
 	punch_sound = load_sound('punch.wav')
 	chimp = Chimp()
 	fist = Fist()
-	allsprites = pygame.sprite.RenderPlain((fist, chimp))
+	player = Player()
+	allsprites = pygame.sprite.RenderPlain((player, fist, chimp))
 	
 #Main Loop
 	while 1:
@@ -172,8 +182,15 @@ def main():
 		for event in pygame.event.get():
 			if event.type == QUIT:
 				return
-			elif event.type == KEYDOWN and event.key == K_ESCAPE:
-				return
+			elif event.type == KEYDOWN:
+				if event.key == K_ESCAPE:
+					return
+				elif event.key == pygame.K_RIGHT:
+					player.move(1)
+					#print "right"
+				elif event.key == pygame.K_LEFT:
+					player.move(-1)
+					#print "left"
 			elif event.type == MOUSEBUTTONDOWN:
 				if fist.punch(chimp):
 					punch_sound.play() #punch
