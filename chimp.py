@@ -125,7 +125,7 @@ def main():
        a loop until the function returns."""
 #Initialize Everything
     pygame.init()
-    screen = pygame.display.set_mode((468, 60))
+    screen = pygame.display.set_mode((480, 696))
     pygame.display.set_caption('Monkey Fever')
     pygame.mouse.set_visible(0)
 
