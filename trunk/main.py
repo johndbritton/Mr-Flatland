@@ -158,7 +158,7 @@ def main():
 	for x in range(10,20):
 		for y in range(15,20):
 			grid[x][y] = Square(x,y,True,False)
-					
+
 #Main Loop
 	while 1:
 		clock.tick()
