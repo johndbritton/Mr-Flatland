@@ -81,7 +81,8 @@ class Player(pygame.sprite.Sprite):
 		self.alive = True
 		
 		self.font = pygame.font.Font('data/impact.ttf', 18)
-		self.loseTXT=self.font.render('',1,(0,0,0))
+		self.lfont = pygame.font.Font('data/impact.ttf', 35)
+		self.loseTXT=self.lfont.render('',1,(0,0,0))
 		self.scoreTXT=self.font.render(str(self.score),1,(0,0,0))
 		self.bankTXT=self.font.render(str(self.bank),1,(0,0,0))
 		self.multTXT=self.font.render(str(self.mult),1,(0,0,0))
@@ -253,6 +254,8 @@ def main():
 				genTimer = random.randint(1,5)
 				generateBricks(grid)
 			updateHUD(player)
+		elif not player.alive:
+			player.loseTXT = player.font.render('you lose!',1,(0,0,0))
 			
 		
 	#Handle Input Events
@@ -289,6 +292,7 @@ def main():
 				if(grid[x][y].issand or grid[x][y].isbrick):
 					screen.blit(grid[x][y].image, grid[x][y].rect)
 		
+		screen.blit(player.loseTXT, (190,325,0,0))
 		screen.blit(player.scoreTXT,(492,587,0,0))
 		screen.blit(player.bankTXT,(505,430,0,0))
 		screen.blit(player.multTXT,(505,508,0,0))
