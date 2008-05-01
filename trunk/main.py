@@ -97,15 +97,24 @@ class Player(pygame.sprite.Sprite):
 			grid[self.pos][27]=Square(self.pos, 27, False, False)
 			drillCol(self.pos, grid)
 
-def drillCol(pos, grid):
-	if pos >=0 or pos<20:
-		for x in range(0, 27):
-			if grid[pos][26-x].issand:
-				grid[pos][27-x]=Square(pos, 27-x, grid[pos][26-x].isbrick, grid[pos][26-x].issand)
+def drillCol(x, grid):
+	y=len(grid[x])-1
+	if x >=0 or x<20:
+		for i in range(0, y):
+			if grid[x][y-1-i].issand:
+				grid[x][y-i]=Square(x, y-i, grid[x][y-1-i].isbrick, grid[x][y-1-i].issand)
 			else:
-				grid[pos][27-x]=Square(pos, 27-x, False, False)
+				grid[x][y-i]=Square(x, y-i, False, False)
 				return
 
+def moveGrid(grid):
+	l=len(grid[0])-1
+	for x in range(0, len(grid)):
+		for y in range(0, len(grid[x])-1):
+			if grid[x][l-1-y].issand or grid[x][l-1-y].isbrick:
+				if not(grid[x][l-y].issand or grid[x][l-y].isbrick):
+					grid[x][l-y]=Square(x, l-y, grid[x][l-1-y].isbrick, grid[x][l-1-y].issand)
+					grid[x][l-1-y]=Square(x, l-1-y, False, False)
 		
 def main():
 	"""this function is called when the program starts.
@@ -140,6 +149,8 @@ def main():
 	clock = pygame.time.Clock()
 	player = Player()
 	allsprites = pygame.sprite.RenderPlain((player))
+	
+	seconds = 0
 
 	#Game Setup
 	#Empty space
@@ -155,7 +166,7 @@ def main():
 			grid[x][y] = Square(x,y,False,True)
 
 	for x in range(0,10):
-		for y in range(15,20):
+		for y in range(0,5):
 			grid[x][y] = Square(x,y,True,True)
 				
 	for x in range(10,20):
@@ -165,7 +176,11 @@ def main():
 #Main Loop
 	while 1:
 		clock.tick()
-		print pygame.time.get_ticks()
+		
+		if seconds < pygame.time.get_ticks()/1000.0:
+			seconds+=1
+			#put code here that happens every second!
+			moveGrid(grid)
 
 	#Handle Input Events
 		for event in pygame.event.get():
