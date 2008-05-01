@@ -67,7 +67,7 @@ class Square(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
-		self.image = pygame.image.load("Sprites/player_right.PNG").convert_alpha()
+		self.image = pygame.image.load("Sprites/player.png").convert_alpha()
 		self.rect = pygame.Rect(0, 672, self.image.get_rect().width, self.image.get_rect().height)
 		screen = pygame.display.get_surface()
 		self.area = screen.get_rect()
@@ -122,7 +122,7 @@ def detectLine(grid,player):
 	flat = True
 	above = False
 	row = 0
-		
+
 	for y in range(0,len(grid[0])):
 		if grid[0][y].issand:
 			if y>row:
@@ -135,7 +135,8 @@ def detectLine(grid,player):
 	for x in range(0,20):	
 		if grid[x][row-1].issand:
 			above = True
-			
+						
+	print above
 	if (not(above) and flat):
 		print str("found")
 		for y in range(row, len(grid[0])):
@@ -161,7 +162,7 @@ def main():
 	   a loop until the function returns."""
 #Initialize Everything
 	pygame.init()
-	screen = pygame.display.set_mode((480, 696))
+	screen = pygame.display.set_mode((600, 720))
 	pygame.display.set_caption('Mr. Flatland!')
 	pygame.mouse.set_visible(0)
 
