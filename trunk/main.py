@@ -78,8 +78,10 @@ class Player(pygame.sprite.Sprite):
 		self.score = 0
 		self.bank = 0
 		self.mult = 1
+		self.alive = True
 		
 		self.font = pygame.font.Font('data/impact.ttf', 18)
+		self.loseTXT=self.font.render('',1,(0,0,0))
 		self.scoreTXT=self.font.render(str(self.score),1,(0,0,0))
 		self.bankTXT=self.font.render(str(self.bank),1,(0,0,0))
 		self.multTXT=self.font.render(str(self.mult),1,(0,0,0))
@@ -95,6 +97,8 @@ class Player(pygame.sprite.Sprite):
 			#print "yeah"
 	
 	def drill(self, grid):
+		if self.bank>0:
+			self.mult=1
 		if grid[self.pos][len(grid[self.pos])-1].isbrick:
 			self.mult=1
 			self.bank-=1
@@ -238,17 +242,19 @@ def main():
 	while 1:
 		clock.tick()
 		
-		if seconds < pygame.time.get_ticks()/1000.0:
-			seconds+=1
+		if seconds < pygame.time.get_ticks()/1000.0 and player.alive:
+			seconds+=1-player.score/10000
+			if player.score/10000>.75:
+				seconds+=.25
 			#put code here that happens every second!
 			detectLine(grid,player)
 			moveGrid(grid, player)
 			if(seconds % genTimer == 0):
 				genTimer = random.randint(1,5)
 				generateBricks(grid)
+			updateHUD(player)
 			
 		
-		updateHUD(player)
 	#Handle Input Events
 		for event in pygame.event.get():
 			if event.type == QUIT:
