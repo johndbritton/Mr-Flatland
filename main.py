@@ -45,12 +45,14 @@ def load_sound(name):
 
 #classes for our game objects
 class Square(pygame.sprite.Sprite):
-	def __init__(self, x, y, b, s):
+	def __init__(self, x, y, b, s):	#, h=44):
 		pygame.sprite.Sprite.__init__(self)
 		self.isbrick = b
 		self.issand = s
 		self.x = x
 		self.y = y
+		
+		#self.health=h
 
 		if(b and s):
 			self.image = pygame.image.load("sprites/bricksand.png").convert_alpha()
@@ -63,6 +65,20 @@ class Square(pygame.sprite.Sprite):
 			self.issand = True
 			self.image = pygame.image.load("sprites/sand.png").convert_alpha()
 			self.rect = pygame.Rect(x*24, (y*24)-96, self.image.get_rect().width, self.image.get_rect().height)
+
+#Bricks having health led to less chance of dieing and lower scores
+#This type of situation is exactly what we were trying to avoid by adding death from red blocks reaching the bottom
+#Because of this I am commenting out my Square health implementation
+#def updateSquares(player, grid):
+#	for x in range(0, len(grid)):
+#		for y in range(0, len(grid[0])):
+#			if grid[x][y].issand and grid[x][y].isbrick:
+#				grid[x][y].health-=1
+#				if grid[x][y].health<1:
+#					grid[x][y]=Square(x,y,False,True)
+#					player.bank-=1
+#					if player.bank<0:
+#						player.bank=0
 		
 class Player(pygame.sprite.Sprite):
 	def __init__(self):
@@ -83,9 +99,6 @@ class Player(pygame.sprite.Sprite):
 		self.bank = 0
 		self.mult = 1
 		self.alive = True
-		self.moving = False
-		self.stillMoving = False
-		self.stillMovinger = False
 		
 		self.font = pygame.font.Font('data/impact.ttf', 18)
 		self.lfont = pygame.font.Font('data/impact.ttf', 35)
@@ -104,11 +117,21 @@ class Player(pygame.sprite.Sprite):
 			self.pos+=1
 			self.rect = self.rect.move(self.image.get_rect().width/2,0)
 			#print "yay"
+		elif dir > 0 and self.pos==self.maxPos:
+			self.image=pygame.image.load("Sprites/player_down.png").convert_alpha()
+			self.animating=True
+			self.pos=0
+			self.rect = self.rect.move(-19*self.image.get_rect().width/2,0)
 		elif dir < 0 and self.pos > 0:
 			self.image=pygame.image.load("Sprites/player_down.png").convert_alpha()
 			self.animating=True
 			self.pos-=1
 			self.rect = self.rect.move(-1*self.image.get_rect().width/2,0)
+		elif dir < 0 and self.pos==0:
+			self.image=pygame.image.load("Sprites/player_down.png").convert_alpha()
+			self.animating=True
+			self.pos=self.maxPos
+			self.rect = self.rect.move(19*self.image.get_rect().width/2,0)
 			#print "yeah"
 	
 	def drill(self, grid):
@@ -269,8 +292,8 @@ def main():
 	allsprites = pygame.sprite.RenderPlain((player))
 	
 	seconds = 0
-	tenthSeconds=0
 	quarterSeconds=0
+	fastScroll=False
 	genTimer = random.randint(1,5)
 
 	#Game Setup
@@ -292,18 +315,24 @@ def main():
 		
 		if seconds < pygame.time.get_ticks()/1000.0 and player.alive:
 			increment = (-0.14 * math.log(player.score+.0000001, 2.71828183)) + 1.386
-			if increment>1:
+			if fastScroll:
+				seconds+=.05
+			elif increment>1:
 				seconds+=1
 			elif increment<.1:
 				seconds+=.1
 			else:
 				seconds+= increment
 			#put code here that happens every second!
+			#updateSquares(player, grid)
 			detectLine(grid,player,sfx_flat)
 			moveGrid(grid, player)
 			stillPlaying(grid,player)
 			if(int(seconds) % genTimer == 0):
-				genTimer = random.randint(1,5)
+				max = 5-int(player.score/2000.0)
+				if max<1:
+					max=1
+				genTimer = random.randint(1,max)
 				generateBricks(grid)
 			updateHUD(player)
 		elif not player.alive:
@@ -315,18 +344,9 @@ def main():
 			if player.animating:
 				player.image=pygame.image.load("Sprites/player.png").convert_alpha()
 				player.animating=False
-				
-			if player.moving:
-				player.stillMoving=True
 			#put stuff like the player animation here!
 		
-		if tenthSeconds < pygame.time.get_ticks()/1000.0:
-			tenthSeconds+=.1
-			if player.stillMovinger:
-				player.move(player.dir)
-			if player.stillMoving:
-				player.stillMovinger=True
-		
+	
 	#Handle Input Events
 		for event in pygame.event.get():
 			if event.type == QUIT:
@@ -345,17 +365,11 @@ def main():
 					sfx_dig.play()
 				elif event.key == pygame.K_UP:
 					player.attack(grid)
+				elif event.key == pygame.K_DOWN:
+					fastScroll=True
 			elif event.type == KEYUP:
-				if event.key == pygame.K_RIGHT:
-					player.moving = False
-					player.stillMoving = False
-					player.stillMovinger=False
-					#print "right"
-				elif event.key == pygame.K_LEFT:
-					player.moving = False
-					player.stillMoving = False
-					player.stillMovinger=False
-					#print "left"
+				if event.key == K_DOWN:
+					fastScroll=False
 
 		allsprites.update()
 
