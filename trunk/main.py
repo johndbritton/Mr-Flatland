@@ -117,7 +117,9 @@ class Player(pygame.sprite.Sprite):
 		if grid[self.pos][len(grid[self.pos])-1].isbrick:
 			self.mult=1
 			self.bank-=1
-		if grid[self.pos][len(grid[self.pos])-1].issand:
+			if self.bank<0:
+				self.bank=0
+		elif grid[self.pos][len(grid[self.pos])-1].issand:
 			grid[self.pos][len(grid[self.pos])-1]=Square(self.pos, len(grid[self.pos])-1, False, False)
 			drillCol(self.pos, grid)
 
@@ -187,7 +189,7 @@ def detectLine(grid,player,sfx_flat):
 
 def generateBricks(grid):
 	generate = random.randint(0,9)
-	if(generate == 0 or generate == 1 or generate == 2):
+	if(generate == 0 or generate == 1):
 		generate = True
 	if(generate):
 		start = random.randint(0,20)
@@ -203,6 +205,9 @@ def stillPlaying(grid,player):
 		for y in range(0,4):
 			if grid[x][y].issand:
 				player.alive = False
+	for x in range(0,20):
+		if grid[x][len(grid[0])-1].isbrick:
+			player.alive = False
 
 def updateHUD(player):
 	player.scoreTXT=player.font.render(str(player.score),1,(0,0,0))
@@ -266,7 +271,7 @@ def main():
 
 	#Sand
 	for x in range(0,20):
-		for y in range(24,32):
+		for y in range(20,32):
 			grid[x][y] = Square(x,y,False,True)
 
 #Main Loop
@@ -274,8 +279,8 @@ def main():
 		clock.tick()
 		
 		if seconds < pygame.time.get_ticks()/1000.0 and player.alive:
-			seconds+=1-player.score/1000
-			if player.score/10000>.9:
+			seconds+=.9-player.score/650.0
+			if player.score/1000>.8:
 				seconds+=.1
 			#put code here that happens every second!
 			detectLine(grid,player,sfx_flat)
