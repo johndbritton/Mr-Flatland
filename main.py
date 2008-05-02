@@ -8,7 +8,7 @@ follow along in the tutorial.
 
 
 #Import Modules
-import os, pygame, sys, random
+import os, pygame, sys, random, math
 from pygame.locals import *
 
 if not pygame.font: print 'Warning, fonts disabled'
@@ -74,6 +74,7 @@ class Player(pygame.sprite.Sprite):
 		
 		self.pos = 0
 		self.maxPos = 19
+		self.attacks = 0
 		dir = 0
 		
 		self.animating=False
@@ -90,6 +91,7 @@ class Player(pygame.sprite.Sprite):
 		self.lfont = pygame.font.Font('data/impact.ttf', 35)
 		self.loseTXT=self.lfont.render('',1,(0,0,0))
 		self.scoreTXT=self.font.render(str(self.score),1,(0,0,0))
+		self.attacksTXT=self.font.render(str(self.attacks),1,(0,0,0))
 		self.bankTXT=self.font.render(str(self.bank),1,(0,0,0))
 		self.multTXT=self.font.render(str(self.mult),1,(0,0,0))
 	
@@ -122,6 +124,13 @@ class Player(pygame.sprite.Sprite):
 		elif grid[self.pos][len(grid[self.pos])-1].issand:
 			grid[self.pos][len(grid[self.pos])-1]=Square(self.pos, len(grid[self.pos])-1, False, False)
 			drillCol(self.pos, grid)
+			
+	def attack(self, grid):
+		if self.attacks > 0:
+			for x in range(0,20):
+				if grid[x][len(grid[0])-2].issand:
+					grid[x][len(grid[0])-2] = Square(x,len(grid[0])-2,False,True)
+			self.attacks -= 1
 
 def drillCol(x, grid):
 	y=len(grid[x])-1
@@ -182,6 +191,8 @@ def detectLine(grid,player,sfx_flat):
 		for y in range(row, len(grid[0])):
 			for x in range(0,20):
 				grid[x][y] = Square(x,y,False,True)
+		attack_mod = (player.bank*player.mult) / 75
+		player.attacks += attack_mod
 		player.score += player.bank*player.mult
 		player.bank = 0
 		player.mult = 1
@@ -211,6 +222,7 @@ def stillPlaying(grid,player):
 
 def updateHUD(player):
 	player.scoreTXT=player.font.render(str(player.score),1,(0,0,0))
+	player.attacksTXT=player.font.render(str(player.attacks),1,(0,0,0))
 	player.multTXT=player.font.render(str(player.mult),1,(0,0,0))
 	player.bankTXT=player.font.render(str(player.bank),1,(0,0,0))
 		
@@ -279,9 +291,13 @@ def main():
 		clock.tick()
 		
 		if seconds < pygame.time.get_ticks()/1000.0 and player.alive:
-			seconds+=.9-player.score/650.0
-			if player.score/1000>.8:
+			increment = (-0.14 * math.log(player.score+.0000001, 2.71828183)) + 1.386
+			if increment>1:
+				seconds+=1
+			elif increment<.1:
 				seconds+=.1
+			else:
+				seconds+= increment
 			#put code here that happens every second!
 			detectLine(grid,player,sfx_flat)
 			moveGrid(grid, player)
@@ -327,6 +343,8 @@ def main():
 				elif event.key == pygame.K_SPACE:
 					player.drill(grid)
 					sfx_dig.play()
+				elif event.key == pygame.K_UP:
+					player.attack(grid)
 			elif event.type == KEYUP:
 				if event.key == pygame.K_RIGHT:
 					player.moving = False
@@ -352,6 +370,7 @@ def main():
 		
 		screen.blit(player.loseTXT, (190,325,0,0))
 		screen.blit(player.scoreTXT,(492,587,0,0))
+		screen.blit(player.attacksTXT,(492,620,0,0))
 		screen.blit(player.bankTXT,(505,430,0,0))
 		screen.blit(player.multTXT,(505,508,0,0))
 		allsprites.draw(screen)
