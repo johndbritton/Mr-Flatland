@@ -83,7 +83,7 @@ class Square(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
-		self.image = pygame.image.load("Sprites/player.png").convert_alpha()
+		self.image = pygame.image.load("sprites/player.png").convert_alpha()
 		self.rect = pygame.Rect(-12, 0, self.image.get_rect().width, self.image.get_rect().height)
 		screen = pygame.display.get_surface()
 		self.area = screen.get_rect()
@@ -112,30 +112,30 @@ class Player(pygame.sprite.Sprite):
 		self.moving = True
 		self.dir=dir
 		if dir > 0 and self.pos<self.maxPos:
-			self.image=pygame.image.load("Sprites/player_down.png").convert_alpha()
+			self.image=pygame.image.load("sprites/player_down.png").convert_alpha()
 			self.animating=True
 			self.pos+=1
 			self.rect = self.rect.move(self.image.get_rect().width/2,0)
 			#print "yay"
 		elif dir > 0 and self.pos==self.maxPos:
-			self.image=pygame.image.load("Sprites/player_down.png").convert_alpha()
+			self.image=pygame.image.load("sprites/player_down.png").convert_alpha()
 			self.animating=True
 			self.pos=0
 			self.rect = self.rect.move(-19*self.image.get_rect().width/2,0)
 		elif dir < 0 and self.pos > 0:
-			self.image=pygame.image.load("Sprites/player_down.png").convert_alpha()
+			self.image=pygame.image.load("sprites/player_down.png").convert_alpha()
 			self.animating=True
 			self.pos-=1
 			self.rect = self.rect.move(-1*self.image.get_rect().width/2,0)
 		elif dir < 0 and self.pos==0:
-			self.image=pygame.image.load("Sprites/player_down.png").convert_alpha()
+			self.image=pygame.image.load("sprites/player_down.png").convert_alpha()
 			self.animating=True
 			self.pos=self.maxPos
 			self.rect = self.rect.move(19*self.image.get_rect().width/2,0)
 			#print "yeah"
 	
 	def drill(self, grid):
-		self.image=pygame.image.load("Sprites/player_up.png").convert_alpha()
+		self.image=pygame.image.load("sprites/player_up.png").convert_alpha()
 		self.animating=True
 		if self.bank>0:
 			self.mult=1
@@ -342,7 +342,7 @@ def main():
 		if quarterSeconds < pygame.time.get_ticks()/1000.0:
 			quarterSeconds+=.25
 			if player.animating:
-				player.image=pygame.image.load("Sprites/player.png").convert_alpha()
+				player.image=pygame.image.load("sprites/player.png").convert_alpha()
 				player.animating=False
 			#put stuff like the player animation here!
 		
